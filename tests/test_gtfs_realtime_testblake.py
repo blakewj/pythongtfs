@@ -1,6 +1,10 @@
 from google.transit import gtfs_realtime_pb2
+import sqlite3
+
 import os.path
 import requests
+
+conn = sqlite3.connect('Trips.db')
 url = 'https://api.transport.nsw.gov.au/v1/gtfs/vehiclepos/sydneytrains?key=kyKR5nC5rihOjiI3MGdHPUYz99HzyL1LVUvN'
 
 headers = {'content-type': 'application/x-google-protobuf', 'Accept-Charset': 'UTF-8', 'Authorization': 'apikey kyKR5nC5rihOjiI3MGdHPUYz99HzyL1LVUvN'}
@@ -8,7 +12,7 @@ headers = {'content-type': 'application/x-google-protobuf', 'Accept-Charset': 'U
 response = requests.get(url, data=url, headers=headers)
 
 
-
+trip = []
 
 
 feed = gtfs_realtime_pb2.FeedMessage()
@@ -17,7 +21,11 @@ print(feed.ParseFromString(response.content))
 
 for entity in feed.entity:
   if entity.HasField('vehicle'):
-    print (entity.vehicle)
+    trip[entity] = 1
+    print (trip)
+ 
+ 
+ 
     
 '''
 example feed trip
